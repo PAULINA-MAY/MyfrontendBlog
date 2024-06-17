@@ -1,4 +1,4 @@
-
+import { jwtDecode } from 'jwt-decode'
 import { client, token } from "../api/client"
 
 
@@ -46,7 +46,24 @@ export const addNewComment = async(comment, id) =>{
 }
 
 
+export const getPublishByIdUser = async() =>{
+    const user = jwtDecode(token);
 
+    const res = await client.get(`api/get/getPublishByIdUser/${user._id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+     'Content-Type': 'multipart/form-data'
+        }
+    });
+    return res;
+
+}
+
+export const addNewPublish = async() =>{ 
+
+
+
+}
 
 
 
