@@ -59,11 +59,25 @@ export const getPublishByIdUser = async() =>{
 
 }
 
-export const addNewPublish = async() =>{ 
+export const addNewPublish = async (formData) => {
+    const user = jwtDecode(token);
+    try {
+      const res = await client.post(`api/post/createPublish/${user._id}`, formData,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+      );
+      return res;
+    } catch (error) {
+      console.error("Error posting new publish:", error);
+      throw error;
+    }
+  };
 
 
-
-}
 
 
 

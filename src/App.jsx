@@ -4,7 +4,7 @@ import Login from './features/login'
 import Register from './features/register'
 
 import Home from './features/home'
-import Profile from './features/profile'
+import Publishes from './features/publishes'
 
 function App() {
 
@@ -16,7 +16,7 @@ function App() {
         <Route path='/' element={<Login />}></Route> 
         <Route path='/Register' element={<Register />}></Route> 
         <Route path='/Home' element={<Home />}></Route> 
-        <Route path='/Profile' element = {<Profile/>}></Route>
+        <Route path='/Publishes' element = {<Publishes/>}></Route>
       </Routes>
     </BrowserRouter>
   

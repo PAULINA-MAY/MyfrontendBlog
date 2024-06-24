@@ -1,38 +1,58 @@
 import React, { useState } from "react";
+import { FileInput, Label } from "flowbite-react";
+import { addNewPublish } from '../services/services';
 
 const Modal = ({ isOpen, onClose }) => {
   const [modalTitle, setModalTitle] = useState('');
   const [modalContent, setModalContent] = useState('');
   const [modalImage, setModalImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
-    setModalImage(file);
+    if (file) {
+      setModalImage(file);
+      console.log("Image file selected:", file);
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('title', modalTitle);
     formData.append('content', modalContent);
-    formData.append('image', modalImage);
+    formData.append('file', modalImage);
 
-    // Aquí manejas el onSave internamente en el Modal
-    console.log("Datos guardados en Modal:", formData);
-    // Aquí podrías enviar los datos a una API, actualizar el estado local, etc.
+  
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
 
-    onClose(); // Cierra el modal después de guardar
-    // Limpiar los campos después de guardar si es necesario
-    setModalTitle('');
-    setModalContent('');
-    setModalImage(null);
+    try {
+      const res = await addNewPublish(formData);
+      console.log("Datos guardados en Modal:", res);
+      onClose();
+      setModalTitle('');
+      setModalContent('');
+      setModalImage(null);
+      setImagePreview(null);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error posting new publish:", error);
+    }
   };
 
   return (
     <>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
-          <div className="relative w-auto max-w-lg mx-auto my-6">
+          <div className="relative w-full max-w-lg mx-auto my-6 mt-16">
             {/* Contenido del modal */}
             <div className="bg-white rounded-lg shadow-lg relative flex flex-col w-full outline-none focus:outline-none">
               {/* Cabecera del modal */}
@@ -68,14 +88,40 @@ const Modal = ({ isOpen, onClose }) => {
                       required
                     />
                   </div>
-                  <div>
-                    <label className="block mb-1">Subir Imagen:</label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="w-full"
-                    />
+                  <div className="flex w-full items-center justify-center">
+                    <Label
+                      htmlFor="dropzone-file"
+                      className="flex flex-col items-center justify-center w-full h-64 cursor-pointer rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100"
+                    >
+                      <div className="flex flex-col items-center justify-center w-full h-full pt-5 pb-6">
+                        {imagePreview ? (
+                          <img src={imagePreview} alt="Preview" className="w-full h-full object-cover mb-4" />
+                        ) : (
+                          <>
+                            <svg
+                              className="mb-4 h-8 w-8 text-gray-500"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 20 16"
+                            >
+                              <path
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                              />
+                            </svg>
+                            <p className="mb-2 text-sm text-gray-500">
+                              <span className="font-semibold">Click to upload</span> or drag and drop
+                            </p>
+                            <p className="text-xs text-gray-500">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                          </>
+                        )}
+                      </div>
+                      <FileInput id="dropzone-file" className="hidden" onChange={handleImageUpload} />
+                    </Label>
                   </div>
                   <button
                     type="submit"
@@ -94,6 +140,9 @@ const Modal = ({ isOpen, onClose }) => {
 };
 
 export default Modal;
+
+
+
 
 
 
