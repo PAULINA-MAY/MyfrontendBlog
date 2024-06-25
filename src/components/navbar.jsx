@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { jwtDecode } from 'jwt-decode'
 import { Menu } from '@headlessui/react';
 import { Navigate } from 'react-router-dom';
+import { token } from "../api/client"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -8,6 +10,7 @@ function classNames(...classes) {
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const user = jwtDecode(token);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -39,7 +42,7 @@ const Navbar = () => {
           <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex-shrink-0 flex items-center">
               <img className="h-8 w-8 mr-2" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg" alt="Workflow" />
-              <span className="text-gray-800 text-lg font-semibold hidden sm:block">EnderBlog</span>
+              <span className="text-gray-800 text-lg font-semibold hidden sm:block">VichyBlog</span>
             </div>
             <div className="hidden sm:block sm:ml-6">
               <div className="flex space-x-4">
@@ -54,7 +57,7 @@ const Navbar = () => {
               <div>
                 <Menu.Button className="bg-white flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   <span className="sr-only">Open user menu</span>
-                  <img className="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1607746882042-944635dfe10e" alt="" />
+                  <img className="h-8 w-8 rounded-full" src={user._img} alt="" />
                 </Menu.Button>
               </div>
               <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">

@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { addNewComment } from '../services/services';
 
 const Card = ({ id, title, content, imageUrl, initialComments, date, userImg, userName, width, height, showForm }) => {
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState(initialComments || []);
+
+  // Este efecto se ejecuta cada vez que initialComments cambia
+  useEffect(() => {
+    setComments(initialComments || []);
+  }, [initialComments]);
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
@@ -13,7 +18,19 @@ const Card = ({ id, title, content, imageUrl, initialComments, date, userImg, us
         const res = await addNewComment(comment, id);
         console.log(res.data);
 
-        setComments([...comments, comment]);
+        if (res.data && res.data.Id_c) {
+          const newComment = {
+            commentId: res.data.Id_c,
+            commenterAvatar: res.data.user.ImgProfile_user,
+            commenterName: `${res.data.user.FirstNames_user} ${res.data.user.LastNames_user}`,
+            commentContent: res.data.Content_c,
+            commentDate: res.data.DateCreated_c
+          };
+          setComments([...comments, newComment]);
+        } else {
+          console.error('Invalid response data:', res.data);
+        }
+
         setComment('');
       } catch (error) {
         console.error('Error posting data:', error);
@@ -21,7 +38,6 @@ const Card = ({ id, title, content, imageUrl, initialComments, date, userImg, us
     }
   };
 
-  // Formatear la fecha para incluir la hora
   const formattedDate = new Date(date).toLocaleString('es-ES', {
     year: 'numeric',
     month: 'long',
@@ -57,8 +73,21 @@ const Card = ({ id, title, content, imageUrl, initialComments, date, userImg, us
           {comments.length === 0 ? (
             <p className="text-gray-600">No hay comentarios todavía. Sé el primero en comentar.</p>
           ) : (
-            comments.map((comment, index) => (
-              <p key={index} className="text-gray-800">{comment}</p>
+            comments.map((comment) => (
+              <div key={comment.commentId} className="flex items-start mb-4">
+                <img className="w-10 h-10 rounded-full mr-4" src={comment.commenterAvatar} alt="Commenter Avatar" />
+                <div>
+                  <p className="text-sm font-semibold text-gray-800">{comment.commenterName}</p>
+                  <p className="text-sm text-gray-600">{comment.commentContent}</p>
+                  <p className="text-xs text-gray-500">{new Date(comment.commentDate).toLocaleString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric'
+                  })}</p>
+                </div>
+              </div>
             ))
           )}
         </div>
@@ -87,6 +116,3 @@ const Card = ({ id, title, content, imageUrl, initialComments, date, userImg, us
 };
 
 export default Card;
-
-
-

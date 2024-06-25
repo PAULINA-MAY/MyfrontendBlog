@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { register } from '../services/services';
 
-
 const Register = () => {
   const [firstNames, setFirstNames] = useState("");
   const [lastNames, setLastNames] = useState("");
@@ -9,6 +8,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [isRegistered, setIsRegistered] = useState(false); // Estado para controlar la redirección
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,12 +17,10 @@ const Register = () => {
       return;
     }
     try {
-      const res = await register(email, password, firstNames, lastNames)
+      const res = await register(email, password, firstNames, lastNames);
       console.log(res);
-      setTimeout(() => {
-        console.log("Redireccionando al usuario a la ruta '/'");
-        window.location.href = '/';
-      }, 2000);
+      setIsRegistered(true); // Establece isRegistered a true para activar la redirección
+      window.location.href = '/'; // Redirige al inicio después del registro
     } catch (error) {
       console.error("Error al registrar:", error);
       setError("Error al registrar. Por favor, intente nuevamente.");
@@ -120,3 +118,4 @@ const Register = () => {
 };
 
 export default Register;
+

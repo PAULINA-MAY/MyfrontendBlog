@@ -34,7 +34,8 @@ export const register = async (email, password, firstNames, lastNames) => {
 }
 
 export const addNewComment = async(comment, id) =>{
-    const res = await client.post(`api/post/createComent/${id}`,{
+    const user = jwtDecode(token);
+    const res = await client.post(`api/post/createComent/${id}/${user._id}`,{
         content : comment
     }, {
         headers: {
@@ -51,8 +52,7 @@ export const getPublishByIdUser = async() =>{
 
     const res = await client.get(`api/get/getPublishByIdUser/${user._id}`, {
         headers: {
-            Authorization: `Bearer ${token}`,
-     'Content-Type': 'multipart/form-data'
+            Authorization: `Bearer ${token}`
         }
     });
     return res;
@@ -77,6 +77,39 @@ export const addNewPublish = async (formData) => {
     }
   };
 
+export const deletePublish = async(id) =>{
+    try {
+        const res = await client.delete(`api/delete/deletetPublishById/${id}`,{
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
+            }
+        }
+
+        );
+        return res;
+        
+    } catch (e) {
+        console.log(e)
+        throw e;
+    }
+
+}
+
+export const updatePublish = async (id, formData) => {
+    try {
+        const res = await client.put(`api/put/updatePublish/${id}`, formData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        return res;
+    } catch (e) {
+        console.log(e)
+        throw e;
+    }
+}
 
 
 

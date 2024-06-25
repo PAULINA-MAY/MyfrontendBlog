@@ -1,32 +1,25 @@
 import React, { useState } from "react";
 import { login } from '../services/services';
-import { Navigate } from 'react-router-dom'; 
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false); 
- 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await login(email,password);
+      const res = await login(email, password);
       const token = res.data.token;
       localStorage.setItem("token", token);
       setIsLoggedIn(true);
-
+      window.location.href = '/Home'; 
     } catch (e) {
       console.log(e);
       setError("Error al iniciar sesión");
     }
   };
-
-  if (isLoggedIn) {
-    
-    return <Navigate to="/Home" />;
-  }
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">

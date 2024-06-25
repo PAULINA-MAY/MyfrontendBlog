@@ -17,8 +17,8 @@ const Publishes = () => {
         setTimeout(async () => {
           const res = await getPublishByIdUser();
           setCardData(res.data);
-          setLoading(false); // Mark loading as false once data is fetched
-        }, 2000);
+          setLoading(false); 
+        }, 1000);
       } catch (error) {
         console.error('Error fetching data:', error);
         setLoading(false); // Ensure loading is marked as false even on error
@@ -50,7 +50,7 @@ const Publishes = () => {
         ) : filteredCardData.length === 0 ? (
           <p className="text-center text-gray-600">Aún no hay publicaciones.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filteredCardData.map((card, index) => (
               <LittleCard
                 key={index}

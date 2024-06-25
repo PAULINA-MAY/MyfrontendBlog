@@ -15,11 +15,10 @@ const Home = () => {
           const res = await fetchPublishes();
           setCardData(res.data);
           setLoading(false); 
-        }, 2000)
-  
+        }, 2000);
       } catch (error) {
         console.error('Error fetching data:', error);
-        setLoading(false); // Asegurar que loading se marque como false incluso en caso de error
+        setLoading(false); 
       }
     };
 
@@ -43,7 +42,7 @@ const Home = () => {
                 title={card.title}
                 content={card.content}
                 imageUrl={card.imageUrl}
-                initialComments={card.comments.map(comment => comment.commentContent)}
+                initialComments={card.comments} 
                 date={card.publicationDate}
                 userImg={card.userAvatar}
                 userName={card.userName}

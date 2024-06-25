@@ -12,7 +12,6 @@ const Modal = ({ isOpen, onClose }) => {
     const file = e.target.files[0];
     if (file) {
       setModalImage(file);
-      console.log("Image file selected:", file);
 
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -28,11 +27,6 @@ const Modal = ({ isOpen, onClose }) => {
     formData.append('title', modalTitle);
     formData.append('content', modalContent);
     formData.append('file', modalImage);
-
-  
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
 
     try {
       const res = await addNewPublish(formData);
@@ -53,9 +47,7 @@ const Modal = ({ isOpen, onClose }) => {
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
           <div className="relative w-full max-w-lg mx-auto my-6 mt-16">
-            {/* Contenido del modal */}
             <div className="bg-white rounded-lg shadow-lg relative flex flex-col w-full outline-none focus:outline-none">
-              {/* Cabecera del modal */}
               <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
                 <h3 className="text-xl font-semibold">Crear nuevo elemento</h3>
                 <button
@@ -65,7 +57,6 @@ const Modal = ({ isOpen, onClose }) => {
                   <span className="text-gray-500">×</span>
                 </button>
               </div>
-              {/* Contenido del modal */}
               <div className="relative p-6 flex-auto">
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
@@ -110,7 +101,7 @@ const Modal = ({ isOpen, onClose }) => {
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                                 strokeWidth="2"
-                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                               />
                             </svg>
                             <p className="mb-2 text-sm text-gray-500">
@@ -140,6 +131,7 @@ const Modal = ({ isOpen, onClose }) => {
 };
 
 export default Modal;
+
 
 
 
